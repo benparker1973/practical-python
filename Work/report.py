@@ -26,6 +26,28 @@ def read_portfolio(filename):
         headers = next(rows)
         for row in rows:
             portfolio.append({'name': row[0],
-            'shares': row[1],
-            'price': row[2],})
+            'shares': int(row[1]),
+            'price': float(row[2]),})
     return portfolio
+
+
+def read_prices(filename):
+    prices = {}
+    with open(filename, 'r') as f:
+        rows = csv.reader(f)
+        for row in rows:
+            try:
+                prices[row[0]] = float(row[1])
+            except Exception as err:
+                print(f'Error is {err}. What is this {row}?')
+    return prices
+
+
+def gainloss(portfolio, price):
+    total = 0
+    for s in portfolio:
+        total += s['shares'] * (s['price'] - price[s['name']])
+    return total
+
+prices = read_prices('Data/prices.csv')
+portfolio = read_portfolio(filename)
