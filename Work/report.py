@@ -3,7 +3,7 @@
 # Exercise 2.4
 
 import csv
-import sys
+import fileparse
 
 
 def read_portfolio(filename):
@@ -63,10 +63,14 @@ def print_report(report):
 
 
 def portfolio_report(portfolio_filename, price_filename):
-    prices = read_prices(price_filename)
-    portfolio = read_portfolio(portfolio_filename)
+    prices = dict(fileparse.parse_csv(price_filename, has_headers=False, types=[str, float]))
+    portfolio = fileparse.parse_csv(portfolio_filename, types=[str, int, float])
     report = make_report(portfolio, prices)
     print_report(report)
 
 
-portfolio_report('Data/portfolio.csv', 'Data/prices.csv')
+def main(argv):
+    if len(argv) != 3:
+        raise SystemExit(f'Usage: {argv[0]} portfolio, price')
+    # portfolio_report('Data/portfolio.csv', 'Data/prices.csv')
+    portfolio_report(argv[1], argv[2])

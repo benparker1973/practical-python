@@ -3,6 +3,7 @@
 # Exercise 1.27
 import csv
 import sys
+import report
 
 
 def portfolio_cost(filename):
@@ -19,10 +20,27 @@ def portfolio_cost(filename):
     return total_cost
 
 
+def calc_total_cost(portfolio):
+    total_cost = 0
+    for record in portfolio:
+        try:
+            total_cost += int(record['shares']) * float(record['price'])
+        except ValueError:
+            print(f'This did not work {record}')
+    return total_cost
+
+
+def main(argv):
+    if len(argv) != 2:
+        raise SystemExit(f'Usage: {argv[0]} portfolio')
+    portfolio = report.read_portfolio(filename=filename)
+    cost = calc_total_cost(portfolio=portfolio)
+    print(f'Total cost: ${cost:.2f}')
+
 if len(sys.argv) == 2:
     filename = sys.argv[1]
 else:
     filename = 'Data/portfolio.csv'
 
-cost = portfolio_cost(filename)
-print(f'Total cost ${cost:.2f}')  
+
+  
