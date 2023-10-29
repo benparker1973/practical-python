@@ -3,35 +3,7 @@
 # Exercise 2.4
 
 import csv
-import sys
-
-
-def read_portfolio(filename):
-    '''reads in a portfolio csv file
-    '''
-    portfolio = []
-    with open (filename, 'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for row in rows:
-            portfolio.append({'name': row[0],
-            'shares': int(row[1]),
-            'price': float(row[2]),})
-    return portfolio
-
-
-def read_prices(filename):
-    '''reads in a csv file that has stock prices
-    '''
-    prices = {}
-    with open(filename, 'r') as f:
-        rows = csv.reader(f)
-        for row in rows:
-            try:
-                prices[row[0]] = float(row[1])
-            except Exception as err:
-                print(f'Error is {err}. What is this {row}?')
-    return prices
+import fileparse
 
 
 def gainloss(portfolio, price):
@@ -63,8 +35,8 @@ def print_report(report):
 
 
 def portfolio_report(portfolio_filename, price_filename):
-    prices = read_prices(price_filename)
-    portfolio = read_portfolio(portfolio_filename)
+    prices = dict(fileparse.parse_csv(price_filename, has_headers=False, types=[str, float]))
+    portfolio = fileparse.parse_csv(portfolio_filename, types=[str, int, float])
     report = make_report(portfolio, prices)
     print_report(report)
 
